@@ -4,31 +4,41 @@ public record Code(string? GCode, IEnumerable<(char, string)>? Parameters, strin
 {
     public static Code? Parse(string text)
     {
-        var line = text.AsSpan();
-        var commentIndex = line.IndexOf(';');
-        var comment = commentIndex < 0 ? null : line[commentIndex..].ToString();
-        var nonComment = commentIndex < 0 ? line : line[..commentIndex];
+        if (string.IsNullOrEmpty(text))
+        {
+            return null;
+        }
+
+        var comment = CodeParseHelpers.GetComment(text);
+        var nonComment = CodeParseHelpers.TrimComment(text);
 
         if (nonComment.IsWhiteSpace())
         {
-            return new Code(null, null, comment);
+            return new Code(null, null, comment.ToString());
         }
 
-        var parts = nonComment.ToString().Split(' ', StringSplitOptions.TrimEntries);
+        var enumerator = nonComment.Split(' ');
 
-        var command = ValidateCommand(parts[0]);
-        var parameters = parts[1..]
-            .Where(x => !string.IsNullOrWhiteSpace(x))
-            .Select(x => ParseParameter(x.AsSpan()))
-            .ToList();
+        var command = enumerator.MoveNext() ? ValidateCommand(enumerator.Current) : ValidateCommand(nonComment);
+        var parameters = new List<(char, string)>();
 
-        return new Code(command, parameters, comment);
+        while (enumerator.MoveNext())
+        {
+            if (!enumerator.Current.IsWhiteSpace())
+            {
+                parameters.Add(ParseParameter(enumerator.Current));
+            }
+        }
+
+        return new Code(command, parameters, comment.ToString());
     }
 
     private static string? ValidateCommand(ReadOnlySpan<char> code)
     {
         if (code.IsEmpty || code.IsWhiteSpace())
+        {
             return null;
+        }
 
         if (!char.IsLetter(code[0]))
         {

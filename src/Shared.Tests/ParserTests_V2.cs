@@ -1,8 +1,8 @@
-using Shared.GCode.V1;
+﻿using Shared.GCode.V2;
 
 namespace Shared.Tests;
 
-public class ParserTests
+public class ParserTests_V2
 {
     [Theory]
     [InlineData(";comment", null, null, "comment")]
@@ -21,5 +21,22 @@ public class ParserTests
     {
         var actual = Code.Parse(string.Empty);
         Assert.Null(actual);
+    }
+}
+
+public class SpanSplitEnumeratorTests
+{
+    [Fact]
+    public void SimpleSplit()
+    {
+        var sut = "start;end".AsSpan().Split(';');
+        _ = sut.MoveNext();
+        var first = sut.Current.ToString();
+        _ = sut.MoveNext();
+        var second = sut.Current.ToString();
+        Assert.False(sut.MoveNext());
+
+        Assert.Equal("start", first);
+        Assert.Equal("end", second);
     }
 }
