@@ -50,7 +50,7 @@ public record Code(string? GCode, IEnumerable<(char, string)>? Parameters, strin
             throw new Exception($"'{code}' is not a valid G-Code.");
         }
 
-        return code.ToString();
+        return GetCode(code);
     }
 
     private static string? GetCode(ReadOnlySpan<char> code) => code switch
@@ -77,7 +77,7 @@ public record Code(string? GCode, IEnumerable<(char, string)>? Parameters, strin
         "M420" => "M420",
         "M82" => "M82",
         "M84" => "M84",
-            _ => null
+        _ => null
     };
 
     private static (char Name, string Value) ParseParameter(ReadOnlySpan<char> parameter)
