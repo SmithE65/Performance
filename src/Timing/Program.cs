@@ -1,6 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using Shared;
-using Shared.GCode;
+using Shared.GCode.V2;
 using System.Diagnostics;
 
 Console.WriteLine("Timing...");
@@ -14,9 +14,10 @@ internal static class BasicTiming
     public static void Run(string[] lines)
     {
         var stopwatch = Stopwatch.StartNew();
+        List<Code?> codes;
         try
         {
-            var codes = lines.Select(Code.Parse).ToList();
+            codes = lines.Select(Code.Parse).ToList();
         }
         finally
         {

@@ -1,5 +1,4 @@
-using Shared.GCode;
-using System.Runtime.CompilerServices;
+using Shared.GCode.V1;
 
 namespace Shared.Tests;
 

@@ -1,9 +1,14 @@
-﻿namespace Shared.GCode;
+﻿namespace Shared.GCode.V1;
 
 public record Code(string? GCode, IEnumerable<(char, string)>? Parameters, string? Comment)
 {
     public static Code? Parse(string text)
     {
+        if (string.IsNullOrEmpty(text))
+        {
+            return null;
+        }
+
         var splits = text.Split(';');
 
         var comment = splits.Length > 1 ? string.Join(";", splits[1..]) : null;
@@ -18,14 +23,16 @@ public record Code(string? GCode, IEnumerable<(char, string)>? Parameters, strin
         var command = ValidateCommand(parts[0]);
         var parameters = parts[1..]
             .Where(x => !string.IsNullOrWhiteSpace(x))
-            .Select(ParseParameter);
+            .Select(ParseParameter)
+            .ToList();
 
         return new Code(command, parameters, comment);
     }
 
     private static string? ValidateCommand(string? code)
     {
-        if (string.IsNullOrWhiteSpace(code)) return null;
+        if (string.IsNullOrWhiteSpace(code))
+            return null;
 
         if (!char.IsLetter(code.First()))
         {
