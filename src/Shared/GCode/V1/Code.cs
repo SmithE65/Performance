@@ -1,6 +1,6 @@
 ﻿namespace Shared.GCode.V1;
 
-public record Code(string? GCode, IEnumerable<(char, string)>? Parameters, string? Comment)
+public record Code(string? GCode, IEnumerable<(char, float?)>? Parameters, string? Comment)
 {
     public static Code? Parse(string text)
     {
@@ -32,7 +32,9 @@ public record Code(string? GCode, IEnumerable<(char, string)>? Parameters, strin
     private static string? ValidateCommand(string? code)
     {
         if (string.IsNullOrWhiteSpace(code))
+        {
             return null;
+        }
 
         if (!char.IsLetter(code.First()))
         {
@@ -47,13 +49,13 @@ public record Code(string? GCode, IEnumerable<(char, string)>? Parameters, strin
         return code;
     }
 
-    private static (char Name, string Value) ParseParameter(string parameter)
+    private static (char Name, float? Value) ParseParameter(string parameter)
     {
         if (!char.IsLetter(parameter.First()))
         {
             throw new Exception($"'{parameter}' is not a valid G-Code parameter.");
         }
 
-        return new(parameter.First(), parameter[1..]);
+        return new(parameter.First(), float.TryParse(parameter[1..], out var value) ? value : null);
     }
 }

@@ -1,6 +1,6 @@
-﻿using System.Text;
+﻿using Shared.GCode.V2;
 
-namespace Shared.GCode.V2;
+namespace Shared;
 
 public static class CodeParseHelpers
 {
@@ -33,5 +33,5 @@ public static class CodeParseHelpers
 
 public static class CharSpanExtensions
 {
-    public static SpanSplitEnumerator Split(this ReadOnlySpan<char> span, char splitChar) => new SpanSplitEnumerator(span, splitChar);
+    public static SpanSplitEnumerator Split(this ReadOnlySpan<char> span, char splitChar) => new(span, splitChar);
 }

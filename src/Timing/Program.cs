@@ -1,6 +1,5 @@
-﻿// See https://aka.ms/new-console-template for more information
-using Shared;
-using Shared.GCode.V2;
+﻿using Shared;
+using Shared.GCode.V1;
 using System.Diagnostics;
 
 Console.WriteLine("Timing...");

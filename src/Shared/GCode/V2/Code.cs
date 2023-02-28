@@ -1,6 +1,6 @@
 ﻿namespace Shared.GCode.V2;
 
-public record Code(string? GCode, IEnumerable<(char, string)>? Parameters, string? Comment)
+public record Code(string? GCode, IEnumerable<(char, float?)>? Parameters, string? Comment)
 {
     public static Code? Parse(string text)
     {
@@ -20,7 +20,7 @@ public record Code(string? GCode, IEnumerable<(char, string)>? Parameters, strin
         var enumerator = nonComment.Split(' ');
 
         var command = enumerator.MoveNext() ? ValidateCommand(enumerator.Current) : ValidateCommand(nonComment);
-        var parameters = new List<(char, string)>();
+        var parameters = new List<(char, float?)>();
 
         while (enumerator.MoveNext())
         {
@@ -80,13 +80,13 @@ public record Code(string? GCode, IEnumerable<(char, string)>? Parameters, strin
         _ => null
     };
 
-    private static (char Name, string Value) ParseParameter(ReadOnlySpan<char> parameter)
+    private static (char Name, float? Value) ParseParameter(ReadOnlySpan<char> parameter)
     {
         if (!char.IsLetter(parameter[0]))
         {
             throw new Exception($"'{parameter}' is not a valid G-Code parameter.");
         }
 
-        return new(parameter[0], parameter[1..].ToString());
+        return new(parameter[0], float.TryParse(parameter[1..], out var val) ? val : null);
     }
 }
