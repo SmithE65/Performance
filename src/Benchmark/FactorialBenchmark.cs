@@ -8,7 +8,7 @@ namespace Benchmark;
 [RankColumn]
 public class FactorialBenchmark
 {
-    [Params(5)]
+    [Params(1, 6, 12)]
     public int Value { get; set; }
 
     [Benchmark]

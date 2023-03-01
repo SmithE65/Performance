@@ -14,8 +14,10 @@ public static class Factorial
             return 1;
         }
 
-        return number * Recursive(number - 1);
+        return Recursion(number - 1);
     }
+
+    private static long Recursion(int number) => number < 2 ? 1L : number * Recursion(number - 1);
 
     public static long Linq(int number) => Enumerable.Range(1, number).Aggregate(1L, (acc, number) => acc * number);
 
