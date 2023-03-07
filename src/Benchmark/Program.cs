@@ -4,6 +4,6 @@ using BenchmarkDotNet.Running;
 Console.WriteLine("Benchmarking...");
 
 //_ = BenchmarkRunner.Run<MyBenchmark>();
-_ = BenchmarkRunner.Run<FactorialBenchmark>();
+//_ = BenchmarkRunner.Run<FactorialBenchmark>();
 //_ = BenchmarkRunner.Run<StringBuilderBenchmark>();
-//_ = BenchmarkRunner.Run<LoopBenchmark>();
+_ = BenchmarkRunner.Run<LoopBenchmark>();
